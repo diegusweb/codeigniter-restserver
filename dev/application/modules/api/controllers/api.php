@@ -7,10 +7,20 @@ class Api extends REST_Controller {
     public function __construct() {
         parent::__construct();
         //$this->load->model('books_model');
-        //$this->load->model('api_model');
+        $this->load->model('api_model');
         $this->methods['user_get']['limit'] = 500; //500 requests per hour per user/key
         $this->methods['user_post']['limit'] = 100; //100 requests per hour per user/key
         $this->methods['user_delete']['limit'] = 50; //50 requests per hour per user/key
+    }
+    
+    function line_get(){
+        $trans = $this->api_model->getListTransport();
+        
+        if ($trans) {
+            $this->response($trans, 200); // 200 being the HTTP response code
+        } else {
+            $this->response(array('error' => 'User could not be found'), 404);
+        }
     }
 
     function user_get() {
