@@ -65,6 +65,8 @@ class Bo extends CI_Controller {
         $crud->set_table('address');
         if($id_transport != null    )
             $crud->where('id_transport',$id_transport);
+        
+        $crud->required_fields('address', 'lat','lng');
 
         $output = $crud->render();
         $this->_example_output($output);
