@@ -44,6 +44,8 @@ class Bo extends CI_Controller {
         $crud->set_relation('id_city', 'city', 'name');
         $crud->set_relation('id_type', 'type', 'name');
         
+         $crud->required_fields('line', 'id_city','id_type');
+        
          $crud->add_action('Ruta', base_url() . "/assets/front_files/img/add2.png", 'bo/route_management');
 
         $output = $crud->render();
