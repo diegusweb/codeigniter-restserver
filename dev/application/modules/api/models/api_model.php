@@ -32,9 +32,9 @@ LEFT JOIN section AS s ON s.id_section = q.id_section WHERE qu.id_quizes=".$id."
          return null;
     }*/
 	
-	public function getListTransport() {
+	public function getListTransport($city) {
         $query = "SELECT tra.id_transport, tra.line, ci.name FROM `transport` As tra LEFT JOIN type AS ty ON ty.id_type = tra.id_type
-                LEFT JOIN city AS ci ON ci.id_city = tra.id_city ";
+                LEFT JOIN city AS ci ON ci.id_city = tra.id_city WHERE ci.name='".$city."'";
        
         $results = $this->db->query($query);
         if ($results->num_rows() > 0) {

@@ -14,7 +14,9 @@ class Api extends REST_Controller {
     }
     
     function line_get(){
-        $trans = $this->api_model->getListTransport();
+        $paramValue = $this->get('city');
+        
+        $trans = $this->api_model->getListTransport($paramValue );
         
         if ($trans) {
             $this->response($trans, 200); // 200 being the HTTP response code

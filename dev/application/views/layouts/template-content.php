@@ -53,7 +53,7 @@
 
                                     <i class="icon-bell-alt"></i>
 
-                                    <span class="badge badge-success"><?php echo $nuevos; ?></span>
+                                    <span class="badge badge-success"></span>
                                 </a>
                                 <ul class="dropdown-menu extended notification">
                                     <li>
@@ -77,7 +77,7 @@
 
                                     <i class="icon-bell-alt"></i>
 
-                                    <span class="badge badge-danger"><?php echo $alarma; ?></span>
+                                    <span class="badge badge-danger"></span>
                                 </a>
                                 <ul class="dropdown-menu extended notification">
                                     <li>
@@ -87,7 +87,7 @@
                                         <a href="<?php echo base_url() . "adminbo/payment_management/expiro" ?>">
                                             <span class="label label-important"><i class="icon-bolt"></i></span>
 
-                                            <span class="small italic"> Hay <?php echo $alarma; ?> Cuentas que expiraron</span>
+                                            <span class="small italic"> Hay  Cuentas que expiraron</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -156,37 +156,25 @@
                     </li>
 
                     <li class="has-sub">
-                        <a href="<?php echo site_url('adminbo/quiz_managament') ?>" class="">
-                            <span class="icon-box"><i class="icon-glass"></i></span> View Quiz
+                        <a href="<?php echo site_url('bo/city_management') ?>" class="">
+                            <span class="icon-box"><i class="icon-glass"></i></span> Ciudad
                             <span class="arrow"></span>
                         </a>
                     </li> 
 
                     <li class="has-sub">
-                        <a href="<?php echo site_url('adminbo/payment_management') ?>" class="">
-                            <span class="icon-box"><i class="icon-key"></i></span> Payment Report
+                        <a href="<?php echo site_url('bo/transport_management') ?>" class="">
+                            <span class="icon-box"><i class="icon-key"></i></span> transporte
                             <span class="arrow"></span>
                         </a>
                     </li> 
 
                     <li class="has-sub">
-                        <a href="javascript:;" class="">
-                            <span class="icon-box"> <i class="icon-bell-alt"></i></span>View Reports
+                        <a href="<?php echo site_url('bo/route_management') ?>" class="">
+                            <span class="icon-box"><i class="icon-key"></i></span> rutas
                             <span class="arrow"></span>
                         </a>
-                        <ul class="sub">
-                            <li><a class="" href="<?php echo base_url() . "adminbo/history_management"; ?>">History Evaluation</a></li>
-
-                        </ul>
-                    </li>
-
-                   <!-- <li class="has-sub">
-                        <a href="<?php echo site_url('adminbo/answer_managament') ?>" class="">
-                            <span class="icon-box"><i class="icon-bolt"></i></span> List Answers
-                            <span class="arrow"></span>
-                        </a>
-                    </li> -->
-
+                    </li> 
 
 
                 </ul>
@@ -227,138 +215,7 @@
         <script type="text/javascript" src="<?php echo RESOURCES_PATH; ?>js/jquery.validate.min.js"></script>
         <script src="<?php echo RESOURCES_PATH; ?>js/scripts.js"></script>
 
-        <script>
-                            jQuery(document).ready(function () {
-                                // initiate layout and plugins
-                                App.init();
-                            });
 
-                            $(document).ready(function () {
-
-                                function bindClicks() {
-                                    $("ul.tsc_pagination a").click(paginationClick);
-                                    $(".dd").click(paginationClick2);
-                                }
-
-                                function bindClicksaa() {
-                                    $(".dd").click(paginationClick2);
-                                }
-
-                                function paginationClick2() {
-                                    var href = $(this).attr('data-id');
-                                    $("#rounded-corner").css("opacity", "0.4");
-
-
-                                    $.ajax({
-                                        type: "GET",
-                                        url: href,
-                                        data: {},
-                                        success: function (response)
-                                        {
-                                            //alert(response);
-                                            $("#rounded-corner").css("opacity", "1");
-                                            $("#divID").html(response);
-                                            bindClicks();
-                                        }
-                                    });
-
-                                    return false;
-                                }
-
-                                function paginationClick() {
-                                    var href = $(this).attr('href');
-                                    $("#rounded-corner").css("opacity", "0.4");
-
-
-                                    $.ajax({
-                                        type: "GET",
-                                        url: href,
-                                        data: {},
-                                        success: function (response)
-                                        {
-                                            //alert(response);
-                                            $("#rounded-corner").css("opacity", "1");
-                                            $("#divID").html(response);
-                                            bindClicks();
-                                        }
-                                    });
-
-                                    return false;
-                                }
-
-                                bindClicks();
-                            });
-        </script>
-        <script type="text/javascript">
-            var demo;
-            $("document").ready(function () {
-
-                $('#answer_text_1_field_box').hide();
-                $('#answer_text_2_field_box').hide();
-                $('#answer_text_3_field_box').hide();
-                $('#answer_text_4_field_box').hide();
-                $('#answer_text_5_field_box').hide();
-                $('#answer_text_6_field_box').hide();
-
-
-                $('select[name="answer_num"]').on('change', function () {
-                    var i = 0;
-                    for (i = 0; i <= 6; i++) {
-                        $('#answer_text_' + i + '_field_box').hide();
-                    }
-
-                    for (i = 0; i <= $(this).attr('value'); i++) {
-                        $('#answer_text_' + i + '_field_box').show();
-                    }
-
-                });
-
-                $('.viewAnswers').live( "click", function() {
-
-                    //$('#myModal').modal('show');
-
-                    var urlInfo = base_url + "adminbo/showgetAnswers/" + $(this).attr('data-id');
-
-                    //console.log(urlInfo);
-
-                    $(".modal-body").load(urlInfo, function () {
-
-                        $('#myModal').modal({
-                            show: true,
-                            keyboard: false,
-                            backdrop: 'static'
-                        });
-
-                    });
-                });
-
-                //console.log(window.location.href);
-                if (/answer_managament/.test(window.location.href)) {
-                    $(".datatables-add-button").hide();
-                    if (/add/.test(window.location.href)) {
-                        $("#save-and-go-back-button").hide();
-
-
-                        $('#cancel-button').click(function () {
-                            window.location.href = base_url + "/adminbo/questions_managament/" +<?php echo $this->session->userdata('quiz') ?>;
-                        });
-
-                        ("#save-and-go-back-button").click(function () {
-                            window.location.href = base_url + "/adminbo/questions_managament/" +<?php echo $this->session->userdata('quiz') ?>;
-                        });
-                    }
-                    if (/edit/.test(window.location.href)) {
-
-                        for (i = 0; i <= $('#field-answer_num option:selected').text(); i++) {
-                            $('#answer_text_' + i + '_field_box').show();
-                        }
-
-                        $("#form-button-save").hide();
-                    }
-                }
-            });
-
-        </script>
         <!--<div id="myModalAddSolicitante" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
