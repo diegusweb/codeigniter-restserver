@@ -45,14 +45,39 @@ class Bo extends CI_Controller {
         $crud->set_relation('id_type', 'type', 'name');
         
          $crud->required_fields('line', 'id_city','id_type');
+         $crud->unset_fields('create_date');
+         $crud->unset_columns('create_date');
         
-         $crud->add_action('Ruta Ida', base_url() . "/assets/front_files/img/add2.png", 'bo/route_management');
-         $crud->add_action('Ruta Vuelta', base_url() . "/assets/front_files/img/add2.png", 'bo/route_management');
+         $crud->add_action('Ruta Ida', base_url() . "/assets/front_files/img/add2.png", 'bo/adress_management');
+         $crud->add_action('Ruta Vuelta', base_url() . "/assets/front_files/img/add2.png", 'bo/adress_management');
+         
+         //$crud->add_action('Photos', '', '','ui-icon-image',array($this,'just_a_test'));
+         
+         //$crud->callback_column('line', array($this, 'rutas'));
 
         $output = $crud->render();
         $this->_example_output($output);
     }
     
+    function rutas($value, $row)
+    {
+       return "<div style='width:250px;'><div style='width:42px; float:left'>".$value." </div> <div style='width:300px;'>"
+               . "<button data-id='".$row->id_transport."' class='modalIda edit_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary'>"
+               . "<span class='ui-button-icon-primary ui-icon ui-icon-document'></span>"
+               . "<span class='ui-button-text'> Ruta Ida</span></button>"
+               . "<button data-id='".$row->id_transport."' class='modalVuelta edit_button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary'>"
+               . "<span class='ui-button-icon-primary ui-icon ui-icon-document'></span>"
+               . "<span class='ui-button-text'> Ruta Vuelta</span></button></div></div>";
+    }
+    
+    function loadMap(){
+        $this->load->view('maps');
+    }
+    
+    public function adress_management(){
+        $this->layout->view('maps');
+    }
+
     public function route($id_transport = null){
         if (!empty($id_transport))
             $this->session->set_userdata('transport', $id_transport);
