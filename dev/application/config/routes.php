@@ -57,7 +57,7 @@ $route['api/user/(:num)'] = 'api/user/id/$1'; // Example 4
 $route['api/user/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/user/id/$1/format/$3$4'; // Example 8
 //
 $route['api/line']['get'] = "api/line";
-//$route['api']['post'] = "api/index";
+$route['api/line']['post'] = "api/line";
 
 
 $route['api']['users'] = "api/users";

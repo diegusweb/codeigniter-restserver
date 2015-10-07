@@ -24,6 +24,13 @@ class Api extends REST_Controller {
             $this->response(array('error' => 'User could not be found'), 404);
         }
     }
+    
+    function line_post(){
+        //$message = array('id' => $this->get('id'), 'name' => $this->post('name'), 'email' => $this->post('email'), 'message' => 'ADDED!');
+         $trans = $this->api_model->getListTransport('Cochabamba');
+         
+        $this->response($trans, 200); // 200 being the HTTP response code
+    }
 
     function user_get() {
         if (!$this->get('id')) {
