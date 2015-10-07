@@ -46,7 +46,8 @@ class Bo extends CI_Controller {
         
          $crud->required_fields('line', 'id_city','id_type');
         
-         $crud->add_action('Ruta', base_url() . "/assets/front_files/img/add2.png", 'bo/route_management');
+         $crud->add_action('Ruta Ida', base_url() . "/assets/front_files/img/add2.png", 'bo/route_management');
+         $crud->add_action('Ruta Vuelta', base_url() . "/assets/front_files/img/add2.png", 'bo/route_management');
 
         $output = $crud->render();
         $this->_example_output($output);
@@ -67,6 +68,8 @@ class Bo extends CI_Controller {
         $crud->set_table('address');
         if($id_transport != null    )
             $crud->where('id_transport',$id_transport);
+        
+        $crud->unset_fields('create_date');
         
         $crud->required_fields('address', 'lat','lng');
 

@@ -16,7 +16,7 @@
  * @package    	grocery CRUD
  * @copyright  	Copyright (c) 2010 through 2014, John Skoumbourdis
  * @license    	https://github.com/scoumbourdis/grocery-crud/blob/master/license-grocery-crud.txt
- * @version    	1.5.0
+ * @version    	1.5.2
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
  */
 
@@ -468,7 +468,7 @@ class grocery_CRUD_Field_Types
  *
  * @package    	grocery CRUD
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
- * @version    	1.5.0
+ * @version    	1.5.2
  * @link		http://www.grocerycrud.com/documentation
  */
 class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
@@ -1517,7 +1517,7 @@ class grocery_CRUD_Model_Driver extends grocery_CRUD_Field_Types
  *
  * @package    	grocery CRUD
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
- * @version    	1.5.0
+ * @version    	1.5.2
  */
 class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 {
@@ -2358,7 +2358,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 		return $input;
 	}
 
-	/*protected function get_dropdown_input($field_info,$value)
+	protected function get_dropdown_input($field_info,$value)
 	{
 		$this->load_js_chosen();
 		$this->set_js_config($this->default_javascript_path.'/jquery_plugins/config/jquery.chosen.config.js');
@@ -2375,34 +2375,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
 
 		$input .= "</select>";
 		return $input;
-	}*/
-	
-	protected function get_dropdown_input($field_info,$value)
-    {
-        $this->set_css($this->default_css_path.'/jquery_plugins/chosen/chosen.css');
-        $this->set_js($this->default_javascript_path.'/jquery_plugins/jquery.chosen.min.js');
-        $this->set_js($this->default_javascript_path.'/jquery_plugins/config/jquery.chosen.config.js');
-    
-        $select_title = str_replace('{field_display_as}',$field_info->display_as,$this->l('set_relation_title'));
-        
-        // modified by chava
-        $state = $field_info->extras[2]; // add|edit| ..etc
-        $default_value = $field_info->extras[1];
-        
-        if ($state === 'add')
-            $value = $default_value;
-        
-        $input = "<select id='field-{$field_info->name}' name='{$field_info->name}' class='chosen-select' data-placeholder='".$select_title."'>";
-        $options = array('' => '') + $field_info->extras[0];
-        foreach($options as $option_value => $option_label)
-        {
-            $selected = !empty($value) && $value == $option_value ? "selected='selected'" : '';
-            $input .= "<option value='$option_value' $selected >$option_label</option>";
-        }
-    
-        $input .= "</select>";
-        return $input;
-    }   
+	}
 
 	protected function get_enum_input($field_info,$value)
 	{
@@ -2994,7 +2967,7 @@ class grocery_CRUD_Layout extends grocery_CRUD_Model_Driver
  *
  * @package    	grocery CRUD
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
- * @version    	1.5.0
+ * @version    	1.5.2
  */
 class grocery_CRUD_States extends grocery_CRUD_Layout
 {
@@ -3423,7 +3396,7 @@ class grocery_CRUD_States extends grocery_CRUD_Layout
  * @package    	grocery CRUD
  * @copyright  	Copyright (c) 2010 through 2014, John Skoumbourdis
  * @license    	https://github.com/scoumbourdis/grocery-crud/blob/master/license-grocery-crud.txt
- * @version    	1.5.0
+ * @version    	1.5.2
  * @author     	John Skoumbourdis <scoumbourdisj@gmail.com>
  */
 
@@ -3446,7 +3419,7 @@ class Grocery_CRUD extends grocery_CRUD_States
 	 *
 	 * @var	string
 	 */
-	const	VERSION = "1.5.0";
+	const	VERSION = "1.5.2";
 
 	const	JQUERY 			= "jquery-1.11.1.min.js";
 	const	JQUERY_UI_JS 	= "jquery-ui-1.10.3.custom.min.js";
@@ -3629,21 +3602,10 @@ class Grocery_CRUD extends grocery_CRUD_States
 	 * @param string $type
 	 * @param array|string $extras
 	 */
-	/*public function field_type($field , $type, $extras = null)
+	public function field_type($field , $type, $extras = null)
 	{
 		return $this->change_field_type($field , $type, $extras);
-	}*/
-	public function field_type($field , $type, $extras = null, $default_value = null)
-    {
-        if ($type === 'dropdown')
-        {
-            $extras[0] = $extras;
-            $extras[1] = $default_value;
-            $extras[2] = $this->getState();
-        }
-        
-        return $this->change_field_type($field , $type, $extras);
-    }   
+	}
 
 	/**
 	 * Change the default primary key for a specific table.
