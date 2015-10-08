@@ -1,8 +1,15 @@
-<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
+
 <div id="map" style="width: 900px; height: 500px;"></div>
+
 <script type="text/javascript">
-    
+
     var direcciones = [];
+    var temp = [];
+    var nameDIreccion = "";
+    var latInfo = 0;
+    var lngInfo = 0;
 
     var map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -34.397, lng: 150.644},
@@ -18,8 +25,8 @@
                 lng: position.coords.longitude
             };
 
-            //infoWindow.setPosition(pos);
-            //infoWindow.setContent('Location found.');
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
             map.setCenter(pos);
         }, function () {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -29,24 +36,58 @@
         handleLocationError(false, infoWindow, map.getCenter());
     }
 
-     map.addListener('click', function(e) {
-        placeMarker(e.latLng);
-        //console.log(e.latLng.M);
+    google.maps.event.addListener(map, "click", function (event)
+    {
+        // place a marker
+        placeMarker(event.latLng);
+
+        // display the lat/lng in your form's lat/lng fields
+        //document.getElementById("latFld").value = event.latLng.lat();
+        //document.getElementById("lngFld").value = event.latLng.lng();
     });
+
+
 
     function placeMarker(location) {
         //alert(location);
-        var d = [location.J,location.M];    
-        direcciones.push(d);
-        
+
         var marker = new google.maps.Marker({
             position: location,
             map: map
         });
-        
-        console.log(direcciones);
+
+
+
+        var geocoder = new google.maps.Geocoder();
+
+        var yourLocation = new google.maps.LatLng(location.J, location.M);
+        geocoder.geocode({'latLng': yourLocation}, processGeocoder);
+
+        temp = [{'lat': location.J, 'lng': location.M, 'name': '', 'city': '', 'country': ''}];
+
+        //direcciones.push(d);
+
+        //console.log(direcciones+" - "+nameDIreccion);
     }
 
+    function processGeocoder(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            if (results[0]) {
+                var na = results[0].formatted_address;
+                var dd = na.split(",");
+                temp[0].name = dd[0];
+                temp[0].city = dd[1].replace(/(^\s*)|(\s*$)/g,"");
+                temp[0].country = dd[2].replace(/(^\s*)|(\s*$)/g,"");
+
+                direcciones.push(temp);
+                console.log(direcciones);
+            } else {
+                error('Google no retorno resultado alguno.');
+            }
+        } else {
+            error("Geocoding fallo debido a : " + status);
+        }
+    }
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
@@ -71,14 +112,18 @@
      }
      })(marker, i));
      }*/
-    $( document ).ready(function() {
-        $('.ver').click(function(){
+    $(document).ready(function () {
+        $('.ver').click(function () {
             console.log(direcciones);
+
         });
+
+
     });
-    
+
 </script>
 
 <br>
 
-<div class="ver">Ver</div>
+Ruta<br>
+<button class="ver">guardar rutas</button>
