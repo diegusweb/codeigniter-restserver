@@ -76,8 +76,8 @@
                 var na = results[0].formatted_address;
                 var dd = na.split(",");
                 temp[0].name = dd[0];
-                temp[0].city = dd[1].replace(/(^\s*)|(\s*$)/g,"");
-                temp[0].country = dd[2].replace(/(^\s*)|(\s*$)/g,"");
+                temp[0].city = dd[1].replace(/(^\s*)|(\s*$)/g, "");
+                temp[0].country = dd[2].replace(/(^\s*)|(\s*$)/g, "");
 
                 direcciones.push(temp);
                 console.log(direcciones);
@@ -115,6 +115,17 @@
     $(document).ready(function () {
         $('.ver').click(function () {
             console.log(direcciones);
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                url: base_url+"maps/saveRoute",
+                data: JSON.stringify(direcciones),
+                success: function (response)
+                {
+                    console.log(response);
+                }
+            });
 
         });
 

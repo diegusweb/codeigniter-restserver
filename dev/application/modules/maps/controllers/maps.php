@@ -42,8 +42,7 @@ class Maps extends CI_Controller {
         $this->layout->view('index2');
     }
     
-    public function pushGeo(){
-        $x = "";
-        array_push($this->items, $x);
+    public function saveRoute(){
+        echo "succes";
     }
 }    
