@@ -75,7 +75,7 @@ class Bo extends CI_Controller {
     }
     
     public function adress_management(){
-        $this->layout->view('maps');
+        redirect('maps/demo');
     }
 
     public function route($id_transport = null){

@@ -1,6 +1,7 @@
 <html>
 <head>	
-        
+         <script src="http://maps.google.com/maps/api/js?sensor=false" 
+          type="text/javascript"></script>
         <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		function updateDatabase(newLat, newLng)
@@ -21,6 +22,9 @@
 	</script>
         
         
+	<script type="text/javascript">
+		var centreGot = false;
+	</script>
 	<?php echo $map['js']; ?></head>
 <body><?php echo $map['html']; ?>
 
