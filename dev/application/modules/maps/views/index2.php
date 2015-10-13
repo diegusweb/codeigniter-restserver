@@ -40,21 +40,17 @@
 
     google.maps.event.addListener(map, "click", function (event)
     {
-        // place a marker
         placeMarker(event.latLng);
-
-        // display the lat/lng in your form's lat/lng fields
-        //document.getElementById("latFld").value = event.latLng.lat();
-        //document.getElementById("lngFld").value = event.latLng.lng();
     });
 
 
-
+    var idg = 0;
     function placeMarker(location) {
         //alert(location);
 
-       var marker = new google.maps.Marker({
+        var marker = new google.maps.Marker({
             position: location,
+            draggable: true,
             map: map
         });
         markers.push(marker);
@@ -65,16 +61,17 @@
 
         var yourLocation = new google.maps.LatLng(location.J, location.M);
         geocoder.geocode({'latLng': yourLocation}, processGeocoder);
+        idg = idg + 1;
+        temp = [{'id': idg, 'lat': location.J, 'lng': location.M, 'name': '', 'city': '', 'country': ''}];
 
-        temp = [{'lat': location.J, 'lng': location.M, 'name': '', 'city': '', 'country': ''}];
-
-        //direcciones.push(d);
-
-        //console.log(direcciones+" - "+nameDIreccion);
+        google.maps.event.addListener(marker, 'dragend', function (event) {
+            console.log(direcciones);
+            console.log(direcciones[direcciones.length - 1]);
+        });
     }
 
     function processGeocoder(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
+        if (status === google.maps.GeocoderStatus.OK) {
             if (results[0]) {
                 var na = results[0].formatted_address;
                 var dd = na.split(",");
@@ -83,7 +80,7 @@
                 temp[0].country = dd[2].replace(/(^\s*)|(\s*$)/g, "");
 
                 direcciones.push(temp);
-                console.log(direcciones);
+                console.log(temp);
             } else {
                 error('Google no retorno resultado alguno.');
             }
@@ -91,31 +88,35 @@
             error("Geocoding fallo debido a : " + status);
         }
     }
-    
+
+    function error(msg) {
+        alert(msg);
+    }
+
     // Sets the map on all markers in the array.
-        function setMapOnAll(map) {
-            console.log(markers.length);
-          for (var i = 0; i < markers.length; i++) {
+    function setMapOnAll(map) {
+        console.log(markers.length);
+        for (var i = 0; i < markers.length; i++) {
             markers[i].setMap(map);
-          }
         }
+    }
 
-        // Removes the markers from the map, but keeps them in the array.
-        function clearMarkers() {
-          setMapOnAll(null);
-        }
+    // Removes the markers from the map, but keeps them in the array.
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
 
-        // Shows any markers currently in the array.
-        function showMarkers() {
-          setMapOnAll(map);
-        }
+    // Shows any markers currently in the array.
+    function showMarkers() {
+        setMapOnAll(map);
+    }
 
-        // Deletes all markers in the array by removing references to them.
-        function deleteMarkers() {
-          clearMarkers();
-          markers = [];
-          direcciones = [];
-        }
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+        direcciones = [];
+    }
 
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
@@ -133,7 +134,7 @@
                 type: "POST",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
-                url: base_url+"maps/saveRoute",
+                url: base_url + "maps/saveRoute",
                 data: JSON.stringify(direcciones),
                 success: function (response)
                 {
@@ -153,7 +154,7 @@
 Ruta<br>
 <button class="ver">guardar rutas</button>
 <br>
-      <input onclick="clearMarkers();" type=button value="Hide Markers">
-      <input onclick="showMarkers();" type=button value="Show All Markers">
-      <input onclick="deleteMarkers();" type=button value="Delete Markers">
+<input onclick="clearMarkers();" type=button value="Hide Markers">
+<input onclick="showMarkers();" type=button value="Show All Markers">
+<input onclick="deleteMarkers();" type=button value="Delete Markers">
 
