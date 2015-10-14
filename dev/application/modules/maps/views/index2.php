@@ -34,35 +34,33 @@
             handleLocationError(true, infoWindow, map.getCenter());
         });
     } else {
-        // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
     }
 
-    google.maps.event.addListener(map, "click", function (event)
-    {
-        placeMarker(event.latLng);
-    });
+    google.maps.event.addListener(map, "click", function (event) {
+        var latitude = event.latLng.lat();
+        var longitude = event.latLng.lng();
+        //console.log( latitude + ', ' + longitude );
+        placeMarker(event);
 
+    }); //end addListener
 
     var idg = 0;
     function placeMarker(location) {
         //alert(location);
-
         var marker = new google.maps.Marker({
-            position: location,
+            position: new google.maps.LatLng(location.latLng.lat(), location.latLng.lng()),
             draggable: true,
             map: map
         });
         markers.push(marker);
 
-
-
         var geocoder = new google.maps.Geocoder();
 
-        var yourLocation = new google.maps.LatLng(location.J, location.M);
+        var yourLocation = new google.maps.LatLng(location.latLng.lat(), location.latLng.lng());
         geocoder.geocode({'latLng': yourLocation}, processGeocoder);
         idg = idg + 1;
-        temp = [{'id': idg, 'lat': location.J, 'lng': location.M, 'name': '', 'city': '', 'country': ''}];
+        temp = [{'id': idg, 'lat': location.latLng.lat(), 'lng': location.latLng.lng(), 'name': '', 'city': '', 'country': ''}];
 
         google.maps.event.addListener(marker, 'dragend', function (event) {
             console.log(direcciones);
@@ -80,7 +78,7 @@
                 temp[0].country = dd[2].replace(/(^\s*)|(\s*$)/g, "");
 
                 direcciones.push(temp);
-                console.log(temp);
+                console.log(direcciones);
             } else {
                 error('Google no retorno resultado alguno.');
             }
@@ -130,12 +128,15 @@
     $(document).ready(function () {
         $('.ver').click(function () {
             console.log(direcciones);
-            $.ajax({
+            var sendInfo = {direcciones: direcciones};
+            
+             $.ajax({
                 type: "POST",
                 dataType: "json",
+                cache: false,
                 contentType: "application/json; charset=utf-8",
                 url: base_url + "maps/saveRoute",
-                data: JSON.stringify(direcciones),
+                data: JSON.stringify(sendInfo),
                 success: function (response)
                 {
                     console.log(response);
