@@ -127,16 +127,11 @@
 
     $(document).ready(function () {
         $('.ver').click(function () {
-            console.log(direcciones);
-            var sendInfo = {direcciones: direcciones};
-            
+
              $.ajax({
                 type: "POST",
-                dataType: "json",
-                cache: false,
-                contentType: "application/json; charset=utf-8",
                 url: base_url + "maps/saveRoute",
-                data: JSON.stringify(sendInfo),
+                data: {'data':JSON.stringify(direcciones)},
                 success: function (response)
                 {
                     console.log(response);

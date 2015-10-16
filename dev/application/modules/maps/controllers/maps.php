@@ -43,14 +43,15 @@ class Maps extends CI_Controller {
     }
     
     public function saveRoute(){
-        //$myArray = $this->input->post('direcciones');
+        $data = json_decode($_POST['data']);
+        //print_r($data);
         
-        $data = $this->input->post('direcciones');
-    $data = json_decode($data);
-    //$sum = $data->direcciones;
 
-    print_r($data);
-       
+       foreach ($data as $array) {
+            echo $array[0]->name;
+        }
+
 
     }
+    
 }    
