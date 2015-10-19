@@ -4,7 +4,8 @@
 <div id="map" style="width: 900px; height: 500px;"></div>
 
 <script type="text/javascript">
-
+    var ids = <?php echo $id_transport;?>;
+    var sense = <?php echo $sense_street;?>;
     var direcciones = [];
     var temp = [];
     var nameDIreccion = "";
@@ -131,7 +132,7 @@
              $.ajax({
                 type: "POST",
                 url: base_url + "maps/saveRoute",
-                data: {'data':JSON.stringify(direcciones)},
+                data: {'id_transport':ids, 'sense':sense, 'data':JSON.stringify(direcciones)},
                 success: function (response)
                 {
                     console.log(response);

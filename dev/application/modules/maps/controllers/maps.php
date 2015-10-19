@@ -39,12 +39,19 @@ class Maps extends CI_Controller {
         $this->layout->view('index', $data);
     }
     
-    public function demo(){
-        $this->layout->view('index2');
+    public function newRoute(){
+        $data['id_transport'] = $this->uri->segment(4);
+        $data['sense_street'] = $this->uri->segment(3);
+        
+        
+        
+        $this->layout->view('index2',$data);
     }
     
     public function saveRoute(){
         $data = json_decode($_POST['data']);
+        $id_transport = json_decode($_POST['id_transport']);
+        $sense = json_decode($_POST['sense']);
         //print_r($data);
         
 
@@ -52,12 +59,12 @@ class Maps extends CI_Controller {
             //echo $array[0]->name;
             
             $dataa = array(
-                'id_transport' => 1,
+                'id_transport' => $id_transport,
                 'name' => $array[0]->name.", ".$array[0]->city.", ".$array[0]->country,
                 'address' => $array[0]->name,
                 'lat' => $array[0]->lat,
                 'lng' => $array[0]->lng,
-                'sense_street' => 1,
+                'sense_street' => $sense,
             );
             
             $this->maps_model->addAddress($dataa);

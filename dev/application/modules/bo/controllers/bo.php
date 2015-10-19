@@ -48,8 +48,8 @@ class Bo extends CI_Controller {
          $crud->unset_fields('create_date');
          $crud->unset_columns('create_date');
         
-         $crud->add_action('Ruta Ida', base_url() . "/assets/front_files/img/add2.png", 'bo/adress_management');
-         $crud->add_action('Ruta Vuelta', base_url() . "/assets/front_files/img/add2.png", 'bo/adress_management');
+         $crud->add_action('Ruta Ida', base_url() . "/assets/front_files/img/add2.png", 'maps/newRoute/1');
+         $crud->add_action('Ruta Vuelta', base_url() . "/assets/front_files/img/add2.png", 'maps/newRoute/2');
          
          //$crud->add_action('Photos', '', '','ui-icon-image',array($this,'just_a_test'));
          
