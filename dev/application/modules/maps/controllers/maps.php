@@ -14,6 +14,7 @@ class Maps extends CI_Controller {
         $this->load->helper('url');
         $this->load->library('googlemaps');
         $this->layout->setLayout('template-content');
+        $this->load->model('maps_model');
     }
     
     public function index(){
@@ -48,7 +49,21 @@ class Maps extends CI_Controller {
         
 
        foreach ($data as $array) {
-            echo $array[0]->name;
+            //echo $array[0]->name;
+            
+            $dataa = array(
+                'id_transport' => 1,
+                'name' => $array[0]->name.", ".$array[0]->city.", ".$array[0]->country,
+                'address' => $array[0]->name,
+                'lat' => $array[0]->lat,
+                'lng' => $array[0]->lng,
+                'sense_street' => 1,
+            );
+            
+            $this->maps_model->addAddress($dataa);
+                
+            
+            
         }
 
 
