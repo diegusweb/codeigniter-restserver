@@ -59,5 +59,6 @@ $route['api/user/(:num)(\.)([a-zA-Z0-9_-]+)(.*)'] = 'api/user/id/$1/format/$3$4'
 $route['api/line']['get'] = "api/line";
 $route['api/line']['post'] = "api/line";
 
+$route['api/route']['get'] = "api/route";
 
 $route['api']['users'] = "api/users";
