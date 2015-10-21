@@ -26,11 +26,22 @@ class Api extends REST_Controller {
     }
     
     function line_post(){
-        //$message = array('id' => $this->get('id'), 'name' => $this->post('name'), 'email' => $this->post('email'), 'message' => 'ADDED!');
+        $message = array('city' => $this->post('city'), 
+            'lat' => $this->post('latDesteny'), 
+            'lng' => $this->post('lonDesteny'), 
+            'latC' => $this->post('latCurrent'),
+            'lngC' => $this->post('lonCurrent'),
+            'message' => 'ADDED!');
 
-         $trans = "";
+        //$paramValue = $this->post('city');
+        
+        $trans = $this->api_model->getFindTransport($message);
          
-        $this->response($trans, 200); // 200 being the HTTP response code
+        if ($trans) {
+            $this->response($message, 200); // 200 being the HTTP response code
+        } else {
+            $this->response(array('error' => 'Find could not be found'), 404);
+        }
     }
     
     function route_get(){

@@ -31,6 +31,16 @@ class Api_model extends CI_Model {
         return null;
     }
     
+    
+    public function getFindTransport($data){
+        $query = "SELECT id_address, id_transport, address, (6371 * ACOS( SIN(RADIANS(lat)) * SIN(RADIANS(".$data['latDesteny'].")) + COS(RADIANS(lng - ".$data['lonDesteny'].")) * COS(RADIANS(lat)) * COS(RADIANS(".$data['latDesteny'].")) ) ) AS distance FROM address HAVING distance < 0.2 /* 1 KM a la redonda */ ORDER BY distance ASC ";
+        
+        $results = $this->db->query($query);
+        if ($results->num_rows() > 0) {
+            return $results->result();
+        }
+        return null;
+    }
 
     public function getQuizId($id, $page) {
         $ids = $this->session->userdata('testquiz');
@@ -75,125 +85,9 @@ WHERE s.id_section=" . $id . " AND qu.id_quizes=" . $ids . " LIMIT 50";
         return null;
     }
 
-    public function getAnswers($id) {
-        $query = "SELECT a.id_questions, a.id_answers, a.answer_num, a.answer_text_1, a.answer_text_2,
-a.answer_text_3,a.answer_text_4,a.answer_text_5,a.answer_text_6, a.correct_answer
-FROM `answers` AS a WHERE a.id_questions =" . $id;
-        $results = $this->db->query($query);
-        $a = array();
-        $b = array();
-        $d = array();
-        $c = array();
+    
 
-        if ($results->num_rows() > 0) {
-            //return $results->result();
-
-            foreach ($results->result() as $row) {
-
-                ///$b["id_answers"] = (int)$row->id_answers;
-                //$b["id_questions"] = (int)$row->id_questions;
-                //$b["answer_num"] = (int)$row->answer_num;
-                //$b["correct_answer"] = (int)$row->correct_answer;
-
-                if ($row->answer_text_1 != null) {
-                    $c["Id"] = 1;
-                    $c["QuestionId"] = (int) $row->id_questions;
-                    $c["Name"] = $row->answer_text_1;
-                    $c["IsAnswer"] = (1 == $row->correct_answer) ? true : false;
-
-                    array_push($d, $c);
-                }
-
-                if ($row->answer_text_2 != null) {
-                    $c["Id"] = 2;
-                    $c["QuestionId"] = (int) $row->id_questions;
-                    $c["Name"] = $row->answer_text_2;
-                    $c["IsAnswer"] = (2 == $row->correct_answer) ? true : false;
-
-                    array_push($d, $c);
-                }
-
-                if ($row->answer_text_3 != null) {
-                    $c["Id"] = 3;
-                    $c["QuestionId"] = (int) $row->id_questions;
-                    $c["Name"] = $row->answer_text_3;
-                    $c["IsAnswer"] = (3 == $row->correct_answer) ? true : false;
-
-                    array_push($d, $c);
-                }
-
-                if ($row->answer_text_4 != null) {
-                    $c["Id"] = 4;
-                    $c["QuestionId"] = (int) $row->id_questions;
-                    $c["Name"] = $row->answer_text_4;
-                    $c["IsAnswer"] = (4 == $row->correct_answer) ? true : false;
-
-                    array_push($d, $c);
-                }
-
-                if ($row->answer_text_5 != null) {
-                    $c["Id"] = 5;
-                    $c["QuestionId"] = (int) $row->id_questions;
-                    $c["Name"] = $row->answer_text_5;
-                    $c["IsAnswer"] = (5 == $row->correct_answer) ? true : false;
-
-                    array_push($d, $c);
-                }
-
-                if ($row->answer_text_6 != null) {
-                    $c["Id"] = 6;
-                    $c["QuestionId"] = (int) $row->id_questions;
-                    $c["Name"] = $row->answer_text_6;
-                    $c["IsAnswer"] = (6 == $row->correct_answer) ? true : false;
-
-                    array_push($d, $c);
-                }
-
-
-
-                //$b = $d;
-
-
-                array_push($a, $d);
-            }
-
-
-            return $this->twodshuffle($d);
-            //return $d;
-        }
-    }
-
-    function custom_shuffle($my_array = array()) {
-        $copy = array();
-        while (count($my_array)) {
-            // takes a rand array elements by its key
-            $element = array_rand($my_array);
-            // assign the array and its value to an another array
-            $copy[$element] = $my_array[$element];
-            //delete the element from source array
-            unset($my_array[$element]);
-        }
-        return $copy;
-    }
-
-    function twodshuffle($array) {
-        // Get array length
-        $count = count($array);
-        // Create a range of indicies
-        $indi = range(0, $count - 1);
-        // Randomize indicies array
-        shuffle($indi);
-        // Initialize new array
-        $newarray = array($count);
-        // Holds current index
-        $i = 0;
-        // Shuffle multidimensional array
-        foreach ($indi as $index) {
-            $newarray[$i] = $array[$index];
-            $i++;
-        }
-        return $newarray;
-    }
+    
 
     public function insertUser($data) {
         $this->db->insert('users', $data);
