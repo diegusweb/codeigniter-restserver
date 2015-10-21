@@ -22,7 +22,7 @@ class Api_model extends CI_Model {
     }
     
     public function getRouteTransport($id) {
-        $query = "SELECT * FROM address  WHERE id_transport=" . $city . "";
+        $query = "SELECT * FROM address WHERE id_transport=" . $id . "";
 
         $results = $this->db->query($query);
         if ($results->num_rows() > 0) {

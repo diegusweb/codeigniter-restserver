@@ -33,15 +33,15 @@ class Api extends REST_Controller {
         $this->response($trans, 200); // 200 being the HTTP response code
     }
     
-    function route_post(){
+    function route_get(){
          $paramValue = $this->get('id');
         
-        $trans = $this->api_model->getRouteTransport($paramValue );
+        $trans = $this->api_model->getRouteTransport($paramValue);
         
         if ($trans) {
             $this->response($trans, 200); // 200 being the HTTP response code
         } else {
-            $this->response(array('error' => 'User could not be found'), 404);
+            $this->response(array('error' => 'sssUser could not be found'), 404);
         }
     }
 

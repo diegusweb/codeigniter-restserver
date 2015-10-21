@@ -60,5 +60,6 @@ $route['api/line']['get'] = "api/line";
 $route['api/line']['post'] = "api/line";
 
 $route['api/route']['get'] = "api/route";
+$route['api/route']['post'] = "api/route";
 
 $route['api']['users'] = "api/users";
