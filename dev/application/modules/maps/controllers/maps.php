@@ -64,6 +64,7 @@ class Maps extends CI_Controller {
                 'address' => $array[0]->name,
                 'lat' => $array[0]->lat,
                 'lng' => $array[0]->lng,
+                'id_city' => $this->maps_model->getCity($array[0]->city),
                 'sense_street' => $sense,
             );
             

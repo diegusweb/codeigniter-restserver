@@ -35,10 +35,20 @@ class Api extends REST_Controller {
 
         //$paramValue = $this->post('city');
         
-        $trans = $this->api_model->getFindTransport($message);
+        $transs = $this->api_model->getFindTransport($this->post('city'),$this->post('latDesteny'),$this->post('lonDesteny'));
+        
+        
+        $a = array();
+        $b = array();
+        foreach ($transs as $value) {
+             array_push($a, $value->id_transport);
+        }
+        $id = array_unique($a);
+        $trans = $this->api_model->getListFindTransport($id[0]);
+        
          
         if ($trans) {
-            $this->response($message, 200); // 200 being the HTTP response code
+            $this->response($trans, 200); // 200 being the HTTP response code
         } else {
             $this->response(array('error' => 'Find could not be found'), 404);
         }

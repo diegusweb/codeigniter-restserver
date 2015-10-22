@@ -21,6 +21,17 @@ class Api_model extends CI_Model {
         return null;
     }
     
+    public function getListFindTransport($city) {
+        $query = "SELECT tra.id_transport, tra.line, ci.name FROM `transport` As tra LEFT JOIN type AS ty ON ty.id_type = tra.id_type
+                LEFT JOIN city AS ci ON ci.id_city = tra.id_city WHERE tra.id_transport=" . $city;
+
+        $results = $this->db->query($query);
+        if ($results->num_rows() > 0) {
+            return $results->result();
+        }
+        return null;
+    }
+    
     public function getRouteTransport($id) {
         $query = "SELECT * FROM address WHERE id_transport=" . $id . "";
 
@@ -32,14 +43,25 @@ class Api_model extends CI_Model {
     }
     
     
-    public function getFindTransport($data){
-        $query = "SELECT id_address, id_transport, address, (6371 * ACOS( SIN(RADIANS(lat)) * SIN(RADIANS(".$data['latDesteny'].")) + COS(RADIANS(lng - ".$data['lonDesteny'].")) * COS(RADIANS(lat)) * COS(RADIANS(".$data['latDesteny'].")) ) ) AS distance FROM address HAVING distance < 0.2 /* 1 KM a la redonda */ ORDER BY distance ASC ";
+    public function getFindTransport($citya, $latDesteny, $lonDesteny){
+        $city = $this->getCity($citya);
+        $query = "SELECT id_address, id_transport, address, (6371 * ACOS( SIN(RADIANS(lat)) * SIN(RADIANS(".$latDesteny.")) + COS(RADIANS(lng - ".$lonDesteny.")) * COS(RADIANS(lat)) * COS(RADIANS(".$latDesteny.")) ) ) AS distance FROM address  HAVING distance < 0.2 /* 1 KM a la redonda */ ORDER BY distance ASC ";
         
         $results = $this->db->query($query);
         if ($results->num_rows() > 0) {
             return $results->result();
         }
         return null;
+    }
+    
+    public function getCity($name){
+        $query = "SELECT id_city FROM city WHERE name='" . ucwords($name) . "'";
+        $result = $this->db->query($query);
+        if ($result->num_rows() > 0) {
+            $result = $this->db->query($query)->result_array();
+            return $result[0]['id_city'];
+        }
+        return 0;
     }
 
     public function getQuizId($id, $page) {
