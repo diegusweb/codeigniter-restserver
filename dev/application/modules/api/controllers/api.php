@@ -55,8 +55,10 @@ class Api extends REST_Controller {
 			}
 		}else{
 			//$this->response(array('empty' => 'sin resultados'), 200);
-			$this->response(array('empty' => 'sin resultados'), 200);
+			$this->response(array(array('id_transport'=>1,'line'=>'','name'=>'vacio')), 200);
 		}
+		
+		//$this->response(array(array('id_transport'=>1,'line'=>'vacio2','name'=>'vacio'),array('id_transport'=>2,'line'=>'vacio3','name'=>'vacssio')), 200);
 		
        
     }
