@@ -42,10 +42,64 @@ class Api_model extends CI_Model {
         return null;
     }
     
-    
-    public function getFindTransport($citya, $latDesteny, $lonDesteny){
+    public function getFindTransport__($citya, $latDesteny, $lonDesteny, $latCurrent,$lonCurrent){
+        $distance = 0.1;
+        $box = $this->getBoundaries($latDesteny, $lonDesteny, $distance);
+        $boxCurrent = $this->getBoundaries($latCurrent, $lonCurrent, $distance);
+        
         $city = $this->getCity($citya);
-        $query = "SELECT id_address, id_transport, address, (6371 * ACOS( SIN(RADIANS(lat)) * SIN(RADIANS(".$latDesteny.")) + COS(RADIANS(lng - ".$lonDesteny.")) * COS(RADIANS(lat)) * COS(RADIANS(".$latDesteny.")) ) ) AS distance FROM address  HAVING distance < 0.2 /* 1 KM a la redonda */ ORDER BY distance ASC ";
+        //$query = "SELECT id_address, id_transport, address, (6371 * ACOS( SIN(RADIANS(lat)) * SIN(RADIANS(".$latDesteny.")) + COS(RADIANS(lng - ".$lonDesteny.")) * COS(RADIANS(lat)) * COS(RADIANS(".$latDesteny.")) ) ) AS distance FROM address  HAVING distance < 0.2 /* 1 KM a la redonda */ ORDER BY distance ASC ";
+        $query = 'SELECT id_address, id_transport, address, (6371 * ACOS( 
+                                            SIN(RADIANS(lat)) 
+                                            * SIN(RADIANS(' . $latCurrent . ')) 
+                                            + COS(RADIANS(lng - ' . $lonCurrent . ')) 
+                                            * COS(RADIANS(lat)) 
+                                            * COS(RADIANS(' . $latCurrent . '))
+                                            )
+                               ) AS distance
+                     FROM (SELECT id_address, id_transport, address, lat, lng, (6371 * ACOS( 
+                                            SIN(RADIANS(lat)) 
+                                            * SIN(RADIANS(' . $latDesteny . ')) 
+                                            + COS(RADIANS(lng - ' . $lonDesteny . ')) 
+                                            * COS(RADIANS(lat)) 
+                                            * COS(RADIANS(' . $latDesteny . '))
+                                            )
+                               ) AS distance
+                     FROM address
+                     WHERE id_city= '.$city.' AND (lat BETWEEN ' . $box['min_lat']. ' AND ' . $box['max_lat'] . ')
+                     AND (lng BETWEEN ' . $box['min_lng']. ' AND ' . $box['max_lng']. ')
+                     HAVING distance  < ' . $distance . '                                       
+                     ORDER BY distance ASC )           
+                     WHERE id_city= '.$city.' AND (lat BETWEEN ' . $boxCurrent['min_lat']. ' AND ' . $boxCurrent['max_lat'] . ')
+                     AND (lng BETWEEN ' . $boxCurrent['min_lng']. ' AND ' . $boxCurrent['max_lng']. ')
+                     HAVING distance  < ' . $distance . '                                       
+                     ORDER BY distance ASC ';
+        
+        
+        $results = $this->db->query($query);
+        if ($results->num_rows() > 0) {
+            return $results->result();
+        }
+        return null;
+    }
+    
+    public function getFindTransport($citya, $latDesteny, $lonDesteny, $latCurrent,$lonCurrent){
+        $distance = 0.1;
+        $box = $this->getBoundaries($latDesteny, $lonDesteny, $distance);
+        $boxCurrent = $this->getBoundaries($latCurrent, $lonCurrent, $distance);
+        
+        $city = $this->getCity($citya);
+        //$query = "SELECT id_address, id_transport, address, (6371 * ACOS( SIN(RADIANS(lat)) * SIN(RADIANS(".$latDesteny.")) + COS(RADIANS(lng - ".$lonDesteny.")) * COS(RADIANS(lat)) * COS(RADIANS(".$latDesteny.")) ) ) AS distance FROM address  HAVING distance < 0.2 /* 1 KM a la redonda */ ORDER BY distance ASC ";
+        
+        //$querySub = "SELECT id_address, id_transport, address, lat, lng, (6371 * ACOS( SIN(RADIANS(lat)) * SIN(RADIANS(".$latDesteny.")) + COS(RADIANS(lng - ".$lonDesteny.")) * COS(RADIANS(lat)) * COS(RADIANS(".$latDesteny.")) ) ) AS distances FROM address  HAVING distances < 0.2 /* 1 KM a la redonda */ ORDER BY distances ASC ";
+        
+        //$query = "SELECT t.id_address, t.id_transport, t.address, (6371 * ACOS( SIN(RADIANS(t.lat)) * SIN(RADIANS(".$latCurrent.")) + COS(RADIANS(t.lng - ".$lonCurrent.")) * COS(RADIANS(t.lat)) * COS(RADIANS(".$latCurrent.")) ) ) AS distance FROM (".$querySub.") as t  HAVING distance < 0.2 /* 1 KM a la redonda */ ORDER BY distance ASC ";
+        
+        
+        
+        $query = 'SELECT *, (6371 * ACOS( SIN(RADIANS(lat))* SIN(RADIANS(' . $latDesteny . '))+ COS(RADIANS(lng - ' . $lonDesteny . ')) * COS(RADIANS(lat))* COS(RADIANS(' . $latDesteny . ')))) AS distance FROM address WHERE (lat BETWEEN ' . $box['min_lat']. ' AND ' . $box['max_lat'] . ') AND (lng BETWEEN ' . $box['min_lng']. ' AND ' . $box['max_lng']. ') HAVING distance  < ' . $distance . ' ORDER BY distance ASC ';
+        
+        
         
         $results = $this->db->query($query);
         if ($results->num_rows() > 0) {
@@ -64,104 +118,30 @@ class Api_model extends CI_Model {
         return 0;
     }
 
-    public function getQuizId($id, $page) {
-        $ids = $this->session->userdata('testquiz');
+    public function getBoundaries($lat, $lng, $distance = 1, $earthRadius = 6371)
+    {
+        $return = array();
 
-        $page = (int) (empty($page) ? 1 : $page);
-        $rp = (int) (empty($rp) ? 200 : $rp);
-        $start = (($page - 1) * $rp);
-
-        if ($this->payment($this->session->userdata('id_users')) > 0) {
-            $query = "SELECT  qu.quiz_name, q.id_questions, q.id_section, q.question_text, q.question_point, s.name_section
-FROM `questions` AS q
-LEFT JOIN quizes AS qu ON qu.id_quizes = q.id_quizes
-LEFT JOIN section AS s ON s.id_section = q.id_section
-WHERE s.id_section=" . $id . " AND qu.id_quizes=" . $ids . " Limit " . $start . ", 200";
-        } else {
-            $query = "SELECT  qu.quiz_name, q.id_questions, q.id_section, q.question_text, q.question_point, s.name_section
-FROM `questions` AS q
-LEFT JOIN quizes AS qu ON qu.id_quizes = q.id_quizes
-LEFT JOIN section AS s ON s.id_section = q.id_section
-WHERE s.id_section=" . $id . " AND qu.id_quizes=" . $ids . " LIMIT 50";
+        // Los angulos para cada dirección
+        $cardinalCoords = array('north' => '0',
+                                'south' => '180',
+                                'east' => '90',
+                                'west' => '270');
+        $rLat = deg2rad($lat);
+        $rLng = deg2rad($lng);
+        $rAngDist = $distance/$earthRadius;
+        foreach ($cardinalCoords as $name => $angle)
+        {
+            $rAngle = deg2rad($angle);
+            $rLatB = asin(sin($rLat) * cos($rAngDist) + cos($rLat) * sin($rAngDist) * cos($rAngle));
+            $rLonB = $rLng + atan2(sin($rAngle) * sin($rAngDist) * cos($rLat), cos($rAngDist) - sin($rLat) * sin($rLatB));
+             $return[$name] = array('lat' => (float) rad2deg($rLatB), 
+                                    'lng' => (float) rad2deg($rLonB));
         }
-
-        $results = $this->db->query($query);
-        if ($results->num_rows() > 0) {
-            return $results->result();
-        }
-
-        return null;
-    }
-
-    public function getQuizIdSimulate($id) {
-        $ids = $this->session->userdata('testquiz');
-        $query = "SELECT  qu.quiz_name, q.id_questions, q.id_section, q.question_text, q.question_point, s.name_section
-            FROM `questions` AS q
-            LEFT JOIN quizes AS qu ON qu.id_quizes = q.id_quizes
-            LEFT JOIN section AS s ON s.id_section = q.id_section WHERE qu.id_quizes=" . $ids . " Limit 100";
-
-        $results = $this->db->query($query);
-        if ($results->num_rows() > 0) {
-            return $results->result();
-        }
-        return null;
-    }
-
-    
-
-    
-
-    public function insertUser($data) {
-        $this->db->insert('users', $data);
-        return true;
-    }
-
-    public function insertHistory($data) {
-        $this->db->insert('history', $data);
-        return true;
-    }
-
-    public function verifyLog($data) {
-        $query = "SELECT * FROM log WHERE id_users='" . $data['id_users'] . "' AND id_quizes='" . $data['id_quizes'] . "' AND id_select='" . $data['id_select'] . "'";
-        $result = $this->db->query($query);
-        if ($result->num_rows() > 0) {
-            $result = $this->db->query($query)->result_array();
-            return $result[0]['current_page'];
-        }
-        return 0;
-    }
-
-    public function insertLog($data) {
-
-        $query = "SELECT * FROM log WHERE id_users='" . $data['id_users'] . "' AND id_quizes='" . $data['id_quizes'] . "' AND id_select='" . $data['id_select'] . "'";
-        $result = $this->db->query($query);
-        if ($result->num_rows() > 0) {
-            $this->db->where('id_users', $data['id_users']);
-            $this->db->update('log', $data);
-            return true;
-        } else {
-            $this->db->insert('log', $data);
-            return true;
-        }
-    }
-
-    public function verifySession($id) {
-        $query = "SELECT * FROM authtoken WHERE token='" . $se . "'";
-        $result = $this->db->query($query);
-        if ($result->num_rows() > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    public function payment($id) {
-        $query = "SELECT * FROM payment WHERE id_users=" . $id . " AND pay_status=1 AND pagado=1";
-        $result = $this->db->query($query);
-        if ($result->num_rows() > 0) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return array('min_lat'  => $return['south']['lat'],
+                     'max_lat' => $return['north']['lat'],
+                     'min_lng' => $return['west']['lng'],
+                     'max_lng' => $return['east']['lng']);
     }
 
 }

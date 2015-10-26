@@ -35,7 +35,9 @@ class Api extends REST_Controller {
 
         //$paramValue = $this->post('city');
         
-        $transs = $this->api_model->getFindTransport($this->post('city'),$this->post('latDesteny'),$this->post('lonDesteny'));
+        
+        
+        $transs = $this->api_model->getFindTransport($this->post('city'),$this->post('latDesteny'),$this->post('lonDesteny'),$this->post('latCurrent'),$this->post('lonCurrent'));
         
 		
 		if($transs != null){
@@ -132,6 +134,8 @@ class Api extends REST_Controller {
     public function send_put() {
         var_dump($this->put('foo'));
     }
+    
+    
 
 }
 
