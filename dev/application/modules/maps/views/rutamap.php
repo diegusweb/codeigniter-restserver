@@ -6,21 +6,9 @@
 
     function initMap() {
 	
-	
-	var demo = [];
     var ids = <?php echo $id_transport;?>;
+	var arrayJS=<?php echo json_encode($rutas);?>;
 
-	    var arrayJS=<?php echo json_encode($rutas);?>;
-
-    // Mostramos los valores del array
-	  var flightPlanCoordinatess = [
-		{lat: 37.772, lng: -122.214},
-		{lat: 21.291, lng: -157.821},
-		{lat: -18.142, lng: 178.431},
-		{lat: -27.467, lng: 153.027}
-	  ];
-	  
-	  
     // Mostramos los valores del array
 	  var flightPlanCoordinates = [];
 	  var flightPlanCoordinatesVuelta = [];
@@ -34,7 +22,6 @@
 			flightPlanCoordinatesVuelta.push({'lat': parseFloat(arrayJS[i].lat), 'lng': parseFloat(arrayJS[i].lng)});
     }
 
-	console.log(flightPlanCoordinates[0].lat);
 	
 	
 	  var map = new google.maps.Map(document.getElementById('mapa'), {
