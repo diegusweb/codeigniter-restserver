@@ -50,10 +50,13 @@ class Bo extends CI_Controller {
         
          $crud->add_action('Ruta Ida', base_url() . "/assets/front_files/img/add4.png", 'maps/newRoute/1');
          $crud->add_action('Ruta Vuelta', base_url() . "/assets/front_files/img/add5.png", 'maps/newRoute/2');
+		  $crud->add_action('Ruta mapa', base_url() . "/assets/front_files/img/map-20.png", 'maps/viewRoute');
+		 
 
         $output = $crud->render();
         $this->_example_output($output);
     }
+	
     
     function rutas($value, $row)
     {

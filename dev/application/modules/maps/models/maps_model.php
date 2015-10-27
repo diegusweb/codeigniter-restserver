@@ -24,6 +24,16 @@ class Maps_model extends CI_Model {
         }
         return 0;
     }
+	
+	 public function getRouteTransport($id) {
+        $query = "SELECT * FROM address WHERE id_transport=" . $id . "";
+
+        $results = $this->db->query($query);
+        if ($results->num_rows() > 0) {
+            return $results->result();
+        }
+        return null;
+    }
 }
 
 ?>

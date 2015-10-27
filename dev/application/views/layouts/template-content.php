@@ -6,10 +6,11 @@
     <head>
         <meta charset="utf-8" />
         <title>Data Tables</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
         <meta content="" name="description" />
         <meta content="" name="author" />
-        
+ 
+
         <link href="<?php echo RESOURCES_PATH; ?>assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link href="<?php echo RESOURCES_PATH; ?>assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
         <link href="<?php echo RESOURCES_PATH; ?>assets/font-awesome/css/font-awesome.css" rel="stylesheet" />

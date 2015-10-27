@@ -69,12 +69,17 @@ class Maps extends CI_Controller {
             );
             
             $this->maps_model->addAddress($dataa);
-                
-            
             
         }
-
-
     }
+	
+	public function viewRoute(){
+		$data['id_transport'] = $this->uri->segment(3);
+		
+		$data['rutas'] = $this->maps_model->getRouteTransport($this->uri->segment(3));
+	
+		 $this->layout->view('rutamap',$data);
+		
+	}
     
 }    
