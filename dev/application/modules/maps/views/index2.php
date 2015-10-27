@@ -49,11 +49,15 @@
     var idg = 0;
     function placeMarker(location) {
         //alert(location);
-        var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(location.latLng.lat(), location.latLng.lng()),
-            draggable: true,
-            map: map
-        });
+			var marker = new google.maps.Marker({
+				position: new google.maps.LatLng(location.latLng.lat(), location.latLng.lng()),
+				draggable: true,
+				map: map
+			});
+		if(sense == 1){
+			marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+		}
+       
         markers.push(marker);
 
         var geocoder = new google.maps.Geocoder();
