@@ -21,7 +21,18 @@ class Api_model extends CI_Model {
         return null;
     }
     
-    public function getListFindTransport($city) {
+    public function getListFindTransport($array) {
+        $query = 'SELECT tra.id_transport, tra.line, ci.name FROM `transport` As tra LEFT JOIN type AS ty ON ty.id_type = tra.id_type
+                LEFT JOIN city AS ci ON ci.id_city = tra.id_city WHERE tra.id_transport IN (' . implode(',', array_map('intval', $array)) . ')';
+
+        $results = $this->db->query($query);
+        if ($results->num_rows() > 0) {
+            return $results->result();
+        }
+        return null;
+    }
+	
+	 public function getListFindTranspor_t($city) {
         $query = "SELECT tra.id_transport, tra.line, ci.name FROM `transport` As tra LEFT JOIN type AS ty ON ty.id_type = tra.id_type
                 LEFT JOIN city AS ci ON ci.id_city = tra.id_city WHERE tra.id_transport=" . $city;
 
@@ -97,7 +108,7 @@ class Api_model extends CI_Model {
         
         
         
-        $query = 'SELECT *, (6371 * ACOS( SIN(RADIANS(lat))* SIN(RADIANS(' . $latDesteny . '))+ COS(RADIANS(lng - ' . $lonDesteny . ')) * COS(RADIANS(lat))* COS(RADIANS(' . $latDesteny . ')))) AS distance FROM address WHERE (lat BETWEEN ' . $box['min_lat']. ' AND ' . $box['max_lat'] . ') AND (lng BETWEEN ' . $box['min_lng']. ' AND ' . $box['max_lng']. ') HAVING distance  < ' . $distance . ' ORDER BY distance ASC ';
+        $query = 'SELECT *, (6371 * ACOS( SIN(RADIANS(lat))* SIN(RADIANS(' . $latDesteny . '))+ COS(RADIANS(lng - ' . $lonDesteny . ')) * COS(RADIANS(lat))* COS(RADIANS(' . $latDesteny . ')))) AS distance FROM address WHERE id_city='.$city.' AND (lat BETWEEN ' . $box['min_lat']. ' AND ' . $box['max_lat'] . ') AND (lng BETWEEN ' . $box['min_lng']. ' AND ' . $box['max_lng']. ') HAVING distance  < ' . $distance . ' ORDER BY distance ASC ';
         
         
         

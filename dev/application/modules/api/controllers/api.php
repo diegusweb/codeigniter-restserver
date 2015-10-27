@@ -41,15 +41,18 @@ class Api extends REST_Controller {
         
 		
 		if($transs != null){
-			 $a = array();
-			$b = array();
+			$a = array();
+			$bus;
+			
+			$count = 0;
 			foreach ($transs as $value) {
 				 array_push($a, $value->id_transport);
+				 $count++;
 			}
 			$id = array_unique($a);
-			$trans = $this->api_model->getListFindTransport($id[0]);
 			
-			 
+			$trans = $this->api_model->getListFindTransport($id);
+
 			if ($trans) {
 				$this->response($trans, 200); // 200 being the HTTP response code
 			} else {
