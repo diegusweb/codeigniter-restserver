@@ -12,7 +12,7 @@ class Api_model extends CI_Model {
 
     public function getListTransport($city) {
         $query = "SELECT tra.id_transport, tra.line, ci.name FROM `transport` As tra LEFT JOIN type AS ty ON ty.id_type = tra.id_type
-                LEFT JOIN city AS ci ON ci.id_city = tra.id_city WHERE ci.name='" . $city . "'";
+                LEFT JOIN city AS ci ON ci.id_city = tra.id_city WHERE ci.name='" . $city . "' AND tra.status=1";
 
         $results = $this->db->query($query);
         if ($results->num_rows() > 0) {
@@ -23,7 +23,7 @@ class Api_model extends CI_Model {
     
     public function getListFindTransport($array) {
         $query = 'SELECT tra.id_transport, tra.line, ci.name FROM `transport` As tra LEFT JOIN type AS ty ON ty.id_type = tra.id_type
-                LEFT JOIN city AS ci ON ci.id_city = tra.id_city WHERE tra.id_transport IN (' . implode(',', array_map('intval', $array)) . ')';
+                LEFT JOIN city AS ci ON ci.id_city = tra.id_city WHERE tra.status=1 AND tra.id_transport IN (' . implode(',', array_map('intval', $array)) . ')';
 
         $results = $this->db->query($query);
         if ($results->num_rows() > 0) {
