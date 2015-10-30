@@ -15,6 +15,7 @@ class Bo extends CI_Controller {
         $this->load->library('grocery_CRUD');
         $this->layout->setLayout('template-content');
         $this->load->library('table');
+        $this->load->model('bo_model');
     }
 
     public function _example_output($output = null) {
@@ -47,16 +48,30 @@ class Bo extends CI_Controller {
          $crud->required_fields('line', 'id_city','id_type');
          $crud->unset_fields('create_date');
          $crud->unset_columns('create_date');
+         
+         $crud->add_action('Ruta Ida', '', '','ui-icon-image',array($this,'rutaIda'));
+        $crud->add_action('Ruta Vuelta', '', '','ui-icon-image',array($this,'rutaVuelta'));
         
-         $crud->add_action('Ruta Ida', base_url() . "/assets/front_files/img/add4.png", 'maps/newRoute/1');
-         $crud->add_action('Ruta Vuelta', base_url() . "/assets/front_files/img/add5.png", 'maps/newRoute/2');
-		  $crud->add_action('Ruta mapa', base_url() . "/assets/front_files/img/map-20.png", 'maps/viewRoute');
-		 
+         //$crud->add_action('Ruta Ida', base_url() . "/assets/front_files/img/add4.png", 'maps/newRoute/1');
+         //$crud->add_action('Ruta Vuelta', base_url() . "/assets/front_files/img/add5.png", 'maps/newRoute/2');
+	$crud->add_action('Ruta mapa', base_url() . "/assets/front_files/img/map-20.png", 'maps/viewRoute');
+
 
         $output = $crud->render();
         $this->_example_output($output);
     }
 	
+    function rutaIda($primary_key , $row){
+        if(!$this->bo_model->getRouteTransport($row->id_transport))
+            return base_url()."maps/newRoute/1/".$row->id_transport;
+        return null;
+    }
+    
+    function rutaVuelta($primary_key , $row){
+        if(!$this->bo_model->getRouteTransport($row->id_transport))
+            return base_url()."maps/newRoute/2/".$row->id_transport;
+        return null;
+    }
     
     function rutas($value, $row)
     {
