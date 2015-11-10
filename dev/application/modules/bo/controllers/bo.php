@@ -19,7 +19,7 @@ class Bo extends CI_Controller {
     }
 
     public function _example_output($output = null) {
-        //$this->verifyLogin();
+        $this->verifyLogin();
         $this->layout->view('index.php', $output);
     }
 
@@ -35,6 +35,41 @@ class Bo extends CI_Controller {
 
         $output = $crud->render();
         $this->_example_output($output);
+    }
+    
+    public function user_management(){
+        $crud = new grocery_CRUD();
+
+        $crud->set_theme('datatables');
+        $crud->set_table('user');
+
+        $crud->field_type('rol','dropdown',
+            array('Admin' => 'Admin', 'User' => 'User'));
+
+        $crud->field_type('city','dropdown',
+            array('Cochabamba' => 'Cochabamba', 'La paz' => 'La paz','Santa cruz' => 'Santa cruz' , 'Potosi' => 'Potosi'));
+        
+                $crud->unset_fields('create_date');
+        $crud->unset_columns('create_date', 'password');
+        
+        //$crud->callback_before_insert(array($this, 'encrypt_password_callback'));
+
+        $output = $crud->render();
+        $this->_example_output($output);
+    }
+    
+    public function encrypt_password_callback($post_array) {
+        $cost = 10;
+        $salt = uniqid(mt_rand());
+
+
+        if (!empty($post_array['password'])) {
+            $post_array['password'] = hmac_hash("sha256", $post_array, $salt);
+        } else {
+            unset($post_array['password']);
+        }
+
+        return $post_array;
     }
     
     public function transport_management(){
@@ -120,14 +155,12 @@ class Bo extends CI_Controller {
 
     public function verifyLogin() {
         $user_id = $this->session->userdata('username');
-        $rol = $this->session->userdata('rol');
-        if (empty($user_id) && empty($rol)) {
-            redirect(base_url() . "blogin", 'outside');
-        } else {
-            if ($rol != "Administrador") {
-                redirect(base_url() . "blogin", 'outside');
-            }
+        if (empty($user_id)) {
+            redirect(base_url() . "login", 'outside');
         }
+        /*if ($this->session->userdata('rol') != "Administrador") {
+            redirect(base_url() . "login", 'outside');
+        }*/
     }
 
 }

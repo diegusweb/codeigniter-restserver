@@ -43,14 +43,14 @@ class Authentication {
 
     //function getRol(){return $this->_roles;}
 
-    function login($username = "", $password = "", $rol="") {
+    function login($username = "", $password = "") {
         if (empty($username) || empty($password))
             return FALSE;
 
         $CI = & get_instance();
 
 
-        $sql = "SELECT * FROM users WHERE email='" . $username . "' AND rol='".$rol."'";
+        $sql = "SELECT * FROM user WHERE email='" . $username . "' AND password='".$password."'";
         $query = $CI->db->query($sql);
         //login ok   AND password='" . $passworda . "'
 
@@ -58,12 +58,12 @@ class Authentication {
         if ($query->num_rows() == 1) {
             $row = $query->row();
             
-            if (password_verify($password, $row->password)){
-                $CI->session->set_userdata('id_users', $row->id_users);
+            if ($row->password){
+                $CI->session->set_userdata('id_user', $row->id_user);
                 $this->_user_id = $row->id_users;
 
-                $CI->session->set_userdata('username', $row->name . " " . $row->surname);
-                $this->_username = $row->name . " " . $row->surname;
+                $CI->session->set_userdata('username', $row->first_name . " " . $row->last_name);
+                $this->_username = $row->first_name . " " . $row->last_name;
                 
                 $CI->session->set_userdata('email', $row->email);
                 $this->_email = $row->email;
@@ -82,6 +82,31 @@ class Authentication {
 
                 return FALSE;
             }
+            
+            /*if (password_verify($password, $row->password)){
+                $CI->session->set_userdata('id_user', $row->id_user);
+                $this->_user_id = $row->id_users;
+
+                $CI->session->set_userdata('username', $row->first_name . " " . $row->last_name);
+                $this->_username = $row->first_name . " " . $row->last_name;
+                
+                $CI->session->set_userdata('email', $row->email);
+                $this->_email = $row->email;
+
+                //$CI->session->set_userdata('password', $password);
+                //$this->_password = $row->PASSWORD;
+                $CI->session->set_userdata('rol',  $row->rol);
+                //$this->_rol= $row->rol;
+
+                $this->_auth = TRUE;
+                return TRUE;
+            }
+            else{
+                $this->_auth = FALSE;
+                $this->logout();
+
+                return FALSE;
+            }*/
 
             
             

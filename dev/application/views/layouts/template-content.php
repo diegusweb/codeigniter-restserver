@@ -157,6 +157,13 @@
                     </li>
 
                     <li class="has-sub">
+                        <a href="<?php echo site_url('bo/user_management') ?>" class="">
+                            <span class="icon-box"><i class="icon-glass"></i></span> User
+                            <span class="arrow"></span>
+                        </a>
+                    </li> 
+                    
+                    <li class="has-sub">
                         <a href="<?php echo site_url('bo/city_management') ?>" class="">
                             <span class="icon-box"><i class="icon-glass"></i></span> Ciudad
                             <span class="arrow"></span>
