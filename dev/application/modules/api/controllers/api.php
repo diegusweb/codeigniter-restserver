@@ -6,7 +6,7 @@ class Api extends REST_Controller {
 
     public function __construct() {
         parent::__construct();
-        //$this->load->model('books_model');
+        // sadas as dsa$this->load->model('books_model');
         $this->load->model('api_model');
         $this->methods['user_get']['limit'] = 500; //500 requests per hour per user/key
         $this->methods['user_post']['limit'] = 100; //100 requests per hour per user/key
